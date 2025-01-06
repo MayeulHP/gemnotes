@@ -26,17 +26,20 @@ This project aims to provide a simple solution to this problem by allowing users
    git clone git@github.com:MayeulHP/gemnotes.git
    ```
 
-2. **Build the Docker images:**
+2. **Add the path of your Obsidian vault (or notes folder)**
+   In `docker-compose.yml` line 10
+
+3. **Build the Docker images:**
    ```bash
    docker-compose build
    ```
 
-3. **Start the containers:**
+4. **Start the containers:**
    ```bash
    docker-compose up
    ```
 
-4. **Access the frontend:**
+5. **Access the frontend:**
    ```bash
    http://localhost:8080
    ```
