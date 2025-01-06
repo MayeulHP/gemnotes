@@ -1,4 +1,4 @@
-# GemNotes: A Simple Note-Taking Application
+# GemNotes: A simple note-taking web app (Self-hosted Obsidian web alternative)
 
 This project implements a basic note-taking application using a Flask backend and a simple HTML frontend.  Notes are stored as files within a designated directory directly on the server.
 
