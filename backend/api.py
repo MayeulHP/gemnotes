@@ -1,24 +1,37 @@
 import os
-from flask import Flask, request, jsonify
+from flask import Flask, request, jsonify, abort
 
 app = Flask(__name__)
 
 NOTES_DIR = os.path.abspath(os.path.join(os.path.dirname(__file__), 'notes'))  #Corrected path
 
+def get_directory_structure(rootdir):
+    """Recursively get the directory structure."""
+    structure = {}
+    rootdir = rootdir.rstrip(os.sep)
+    start = rootdir.rfind(os.sep) + 1
+    for path, dirs, files in os.walk(rootdir):
+        folders = path[start:].split(os.sep)
+        subdir = {folder: {} for folder in folders}
+        parent = structure
+        for folder in folders:
+            parent = parent.setdefault(folder, {})
+        parent.update({'files': files})
+    return structure
+
 @app.route('/notes', methods=['GET'])
 def list_notes():
-    files = [f for f in os.listdir(NOTES_DIR) if os.path.isfile(os.path.join(NOTES_DIR, f))]
-    return jsonify(files)
+    structure = get_directory_structure(NOTES_DIR)
+    return jsonify(structure)
 
-@app.route('/notes/<filename>', methods=['GET'])
-def get_note(filename):
-    filepath = os.path.join(NOTES_DIR, filename)
-    try:
-        with open(filepath, 'r') as f:
-            content = f.read()
-        return jsonify({'filename': filename, 'content': content})
-    except FileNotFoundError:
-        return jsonify({'error': 'File not found'}), 404
+@app.route('/notes/<path:filepath>', methods=['GET'])
+def get_note(filepath):
+    full_path = os.path.join(NOTES_DIR, filepath)
+    if not os.path.isfile(full_path):
+        abort(404, description="File not found")
+    with open(full_path, 'r') as file:
+        content = file.read()
+    return jsonify({'content': content})
 
 @app.route('/notes/<filename>', methods=['PUT'])
 def edit_note(filename):
