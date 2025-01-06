@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>GemNotes</title>
+<link rel="stylesheet" href="styles.css">
+</head>
+<body>
+<div class="container">
+  <div class="sidebar">
+    <h2>List of Notes</h2>
+    <ul id="noteList"></ul>
+  </div>
+  <div class="editor">
+    <h2>View/Edit Note</h2>
+    <input type="text" id="filename" placeholder="Filename">
+    <button onclick="loadNote()">Load</button>
+    <textarea id="noteContent"></textarea>
+    <button onclick="saveNote()">Save</button>
+
+    <h2>Create New Note</h2>
+    <input type="text" id="newFilename" placeholder="New Filename">
+    <textarea id="newNoteContent"></textarea>
+    <button onclick="createNote()">Create</button>
+  </div>
+</div>
+
+<script>
+const noteList = document.getElementById('noteList');
+const filenameInput = document.getElementById('filename');
+const noteContent = document.getElementById('noteContent');
+const newFilenameInput = document.getElementById('newFilename');
+const newNoteContent = document.getElementById('newNoteContent');
+
+async function listNotes() {
+  const response = await fetch('http://localhost:5000/notes');
+  const data = await response.json();
+  noteList.innerHTML = '';
+  data.forEach(filename => {
+    const li = document.createElement('li');
+    li.textContent = filename;
+    li.onclick = () => filenameInput.value = filename;
+    noteList.appendChild(li);
+  });
+}
+
+async function loadNote() {
+  const filename = filenameInput.value;
+  const response = await fetch(`http://localhost:5000/notes/${filename}`);
+  if (response.ok) {
+    const data = await response.json();
+    noteContent.value = data.content;
+  } else {
+    alert('Error loading note: ' + (await response.json()).error);
+  }
+}
+
+async function saveNote() {
+  const filename = filenameInput.value;
+  const content = noteContent.value;
+  const response = await fetch(`http://localhost:5000/notes/${filename}`, {
+    method: 'PUT',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ content })
+  });
+  if (response.ok) {
+    alert('Note saved successfully!');
+listNotes();
+  } else {
+    alert('Error saving note: ' + (await response.json()).error);
+  }
+}
+
+async function createNote() {
+    const filename = newFilenameInput.value;
+    const content = newNoteContent.value;
+    alert("Create functionality not implemented in backend yet");
+}
+
+listNotes();
+</script>
+</body>
+</html>

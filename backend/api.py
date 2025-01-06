@@ -3,7 +3,7 @@ from flask import Flask, request, jsonify
 
 app = Flask(__name__)
 
-NOTES_DIR = '../notes'
+NOTES_DIR = os.path.abspath(os.path.join(os.path.dirname(__file__), 'notes'))  #Corrected path
 
 @app.route('/notes', methods=['GET'])
 def list_notes():
@@ -32,6 +32,32 @@ def edit_note(filename):
         return jsonify({'error': 'File not found'}), 404
     except Exception as e:
         return jsonify({'error': str(e)}), 500
+    
+@app.route('/notes', methods=['POST'])
+def create_note():
+    filename = request.json.get('filename')
+    content = request.json.get('content')
+    filepath = os.path.join(app.config['NOTES_DIR'], filename)
+    try:
+        with open(filepath, 'w') as f:
+            f.write(content)
+        return jsonify({'message': 'Note created successfully'})
+    except FileNotFoundError:
+        return jsonify({'error': 'File not found'}), 404
+    except Exception as e:
+        return jsonify({'error': str(e)}), 500
+
+@app.route('/notes/<filename>', methods=['DELETE'])
+def delete_note(filename):
+    filepath = os.path.join(app.config['NOTES_DIR'], filename)
+    try:
+        os.remove(filepath)
+        return jsonify({'message': 'Note deleted successfully'})
+    except FileNotFoundError:
+        return jsonify({'error': 'File not found'}), 404
+    except Exception as e:
+        return jsonify({'error': str(e)}), 500
 
 if __name__ == '__main__':
-    app.run(debug=True)
+    app.run(host='0.0.0.0', port=5000, debug=True) #correct way
+
