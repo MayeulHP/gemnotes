@@ -7,7 +7,7 @@ services:
     ports:
       - "5000:5000"
     volumes:
-      - /home/mayeul/Coding/gemnotes/notes:/app/notes
+      - /path/to/your/notes:/app/notes
     networks:
       - app-network
   frontend:
