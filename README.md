@@ -42,8 +42,9 @@ This project aims to provide a simple solution to this problem by allowing users
 
 5. **Access the frontend:**
    ```bash
-   http://localhost:8080
+   http://localhost:8082
    ```
+   *You can change the exposed port in `docker-compose.yml`*
 
 ## Shutdown
 
