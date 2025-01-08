@@ -59,6 +59,7 @@ Contributions are welcome! If you have any suggestions or improvements, please o
 
 List of improvements I plan on adding
 
+- [ ] Easy HTTPS support
 - [ ] Responsive design for mobile
 - [ ] Improve file explorer
 - [ ] Improve UI
