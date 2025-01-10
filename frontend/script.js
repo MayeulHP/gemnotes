@@ -9,6 +9,9 @@ const loadingSpinner = document.getElementById('loadingSpinner');
 const toast = document.getElementById('toast');
 const toastMessage = document.getElementById('toastMessage');
 
+const backendPort = 5000;
+const API_BASE_URL = `${window.location.protocol}//${window.location.hostname}:${backendPort}`;
+
 function showCreateNoteModal() {
   createNoteModal.style.display = 'block';
 }
@@ -22,7 +25,7 @@ function closeCreateNoteModal() {
 async function listNotes() {
     loadingSpinner.style.display = 'block';
     try {
-      const response = await fetch('http://localhost:5000/notes');
+      const response = await fetch(`${API_BASE_URL}/notes`);
       const data = await response.json();
       noteList.innerHTML = '';
       renderNotes(data, noteList);
@@ -72,7 +75,7 @@ async function listNotes() {
 
     loadingSpinner.style.display = 'block';
     try {
-      const response = await fetch(`http://localhost:5000/notes/${filepath}`);
+      const response = await fetch(`${API_BASE_URL}/notes/${filepath}`);
       if (response.ok) {
         const data = await response.json();
         noteContent.value = data.content;
@@ -92,7 +95,7 @@ async function saveNote() {
   const content = noteContent.value;
   loadingSpinner.style.display = 'block';
   try {
-    const response = await fetch(`http://localhost:5000/notes/${filename}`, {
+    const response = await fetch(`${API_BASE_URL}/notes/${filename}`, {
       method: 'PUT',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ content })
@@ -120,7 +123,7 @@ async function createNote() {
   }
   loadingSpinner.style.display = 'block';
   try {
-    const response = await fetch(`http://localhost:5000/notes`, {
+    const response = await fetch(`${API_BASE_URL}/notes`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({

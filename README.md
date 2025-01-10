@@ -46,6 +46,18 @@ This project aims to provide a simple solution to this problem by allowing users
    ```
    *You can change the exposed port in `docker-compose.yml`*
 
+> This basic setup is for HTTP only. It is highly recommended to use HTTPS to not expose your notes to attackers.
+
+**HTTPS setup**
+*For Linux only, consider making a pull request to add Windows or MacOS instructions*
+
+Generate a self-signed certificate
+```bash
+openssl req -x509 -nodes -days 365 -newkey rsa:2048 -keyout selfsigned.key -out selfsigned.crt
+```
+
+Move it to `/frontend/ssl` (or somewhere else, but modify `docker-compose.yml` accordingly)
+
 ## Shutdown
 
 ```bash
@@ -60,7 +72,7 @@ Contributions are welcome! If you have any suggestions or improvements, please o
 
 List of improvements I plan on adding
 
-- [ ] Easy HTTPS support
+- [x] Easy HTTPS support
 - [ ] Responsive design for mobile
 - [ ] Improve file explorer
 - [ ] Improve UI

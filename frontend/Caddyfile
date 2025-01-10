@@ -1,0 +1,9 @@
+:443 {
+  root * /srv
+  file_server
+  tls /ssl/selfsigned.crt /ssl/selfsigned.key
+  log {
+    output stdout
+    level DEBUG
+  }
+}
